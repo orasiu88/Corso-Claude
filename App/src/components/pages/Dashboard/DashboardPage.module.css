@@ -35,6 +35,11 @@
   gap: var(--s4);
 }
 
+.timelineSection {
+  display: flex;
+  flex-direction: column;
+}
+
 .historySection {
   grid-column: 1 / -1;
 }

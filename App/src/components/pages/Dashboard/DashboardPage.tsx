@@ -23,7 +23,7 @@ export function DashboardPage() {
           {budget !== null && <BudgetBar />}
         </section>
 
-        <section aria-label="Prossimi rinnovi">
+        <section aria-label="Prossimi rinnovi" className={styles.timelineSection}>
           <PaymentTimeline />
         </section>
 
