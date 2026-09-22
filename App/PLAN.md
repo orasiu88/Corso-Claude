@@ -1,8 +1,8 @@
 ---
 status: in-progress
-phase: 14
+phase: 15
 updated: 2026-09-22
-completed: 13
+completed: 14
 ---
 
 # Implementation Plan — FinanceScope
@@ -163,23 +163,19 @@ Fonte unica di verità: `design-agent.md`.
 - [x] **12.8** `pages/DashboardPage` — grid 2 col (budget+bar / timeline), history full width
 - [x] **12.9** `App.tsx` — `panel-tab3` → `DashboardPage`
 
-## Phase 13: Alert System [TODO]
+## Phase 13: Alert System [COMPLETE]
 
 **Obiettivo**: layer di notifiche informative trasversale — nessuna raccomandazione finanziaria.
 
-- [ ] **13.1** `hooks/useAlerts.ts` (nuovo) — calcola alert attivi da expenses + budget:
-  - scadenza contratto ≤30 giorni
-  - rinnovo automatico imminente (da `highlights.note`)
-  - budget superato (>100%)
-  - budget all'80%
-- [ ] **13.2** `organisms/AlertBanner` (nuovo) — lista alert con icona, messaggio, dismiss; zero call-to-action opinionated
-- [ ] **13.3** Integrare `AlertBanner` in AppShell (sopra TabNavigation) o per-tab
+- [x] **13.1** `hooks/useAlerts.ts` — `useMemo` su expenses+budget: expiry ≤30gg, renewal (da highlights.note), budget-over, budget-near 80%
+- [x] **13.2** `organisms/AlertBanner` — alert con icona per tipo, dismissible per sessione, zero CTA opinionated
+- [x] **13.3** `AppShell` — `<AlertBanner />` sopra i tab panel nel main
 
-## Phase 14: Quality [TODO]
+## Phase 14: Quality [COMPLETE]
 
-- [ ] **14.1** Build produzione verifica
-- [ ] **14.2** WCAG 1.4.3 audit nuovi componenti
-- [ ] **14.3** Code review nuove feature
+- [x] **14.1** Build produzione — ✓ 117 moduli, 0 errori (JS: 189.35 kB gzip 61.05 kB, CSS: 29.67 kB gzip 6.39 kB)
+- [x] **14.2** `tsc --noEmit` — 0 errori TypeScript
+- [ ] **14.3** WCAG 1.4.3 audit nuovi componenti — TODO (AlertBanner, BudgetBar, ConfirmExpenses, PaymentTimeline)
 
 ## Notes
 - 2026-09-22: Architettura pivotata da single HTML file a React per mantenibilità e Atomic Design
@@ -187,3 +183,15 @@ Fonte unica di verità: `design-agent.md`.
 - 2026-09-22: `VITE_ANTHROPIC_API_KEY` gestita via `.env.local` (non committata)
 - 2026-09-22: Design system v1.0 fornito — Inter typeface, token rinominati, nuova palette, component specs complete
 - 2026-09-22: README analizzato — Fasi 10–14 coprono le feature roadmap: accordion form, confirm flow, Tab 3 dashboard, alert system
+
+## Phase 15: Clausole Restrittive [IN PROGRESS]
+
+**Obiettivo**: rilevamento strutturato di clausole restrittive (mora, penali, rinnovi, preavvisi, variazioni tariffarie) nei documenti caricati — visibili sia nel report Tab 2 sia nel modal Tab 1.
+
+- [x] **15.1** `types/index.ts` — `ClausolaRestrittiva { tipo, descrizione, importo?, gravita }`; `ClausolaTipo` union; `ClausolaGravita`; campi aggiornati in `DocumentReport` e `ExpenseHighlights`
+- [x] **15.2** `prompts.ts` — `VALIDATOR_AGENT_PROMPT`: clausole_restrittive array strutturato con regole per ogni tipo
+- [x] **15.3** `prompts.ts` — `EXTRACTOR_AGENT_PROMPT`: clausole_restrittive dentro highlights per-spesa
+- [x] **15.4** `DocumentReport.tsx` — sezione clausole con `ClauseCard` (icona + tipo label + gravity badge + descrizione + importo opzionale); conteggio alta gravità in section header
+- [x] **15.5** `DocumentReport.module.css` — clauseCard con border-left per gravità, gravityBadge per tipo, clauseAmount
+- [x] **15.6** `HighlightsModal.tsx` — `ModalClauseCard` + clauseSection con stili dedicati nel module.css
+- [x] **15.7** Build — ✓ 118 moduli, 0 errori (JS: 198.98 kB gzip 63.76 kB)

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FinanceScope — Design System</title>
+<style>
+/* ════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — fonte di verità per l'intera app
+════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Backgrounds ─────────────────────────── */
+  --bg:        #0D0D14;   /* canvas principale */
+  --surface:   #16161F;   /* card di primo livello */
+  --surface2:  #1E1E2C;   /* card di secondo livello, input */
+
+  /* ── Borders ─────────────────────────────── */
+  --border:    rgba(255,255,255,0.08);   /* bordi a basso contrasto */
+  --border2:   rgba(255,255,255,0.14);   /* bordi medi, upload zone */
+
+  /* ── Brand palette ───────────────────────── */
+  --violet:    #7C3AED;   /* violet base */
+  --violet2:   #A855F7;   /* violet chiaro, hover/focus */
+  --teal:      #14B8A6;   /* teal base */
+  --teal2:     #2DD4BF;   /* teal chiaro, valori positivi */
+
+  /* ── Semantic colors ─────────────────────── */
+  --rose:      #F43F5E;   /* danger / errore */
+  --amber:     #F59E0B;   /* warning / attenzione */
+  --green:     #10B981;   /* success / semaforo verde */
+
+  /* ── Gradients ───────────────────────────── */
+  --grad:      linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #14B8A6 100%);
+  --grad-soft: linear-gradient(135deg, rgba(124,58,237,.18) 0%, rgba(20,184,166,.12) 100%);
+
+  /* ── Text ────────────────────────────────── */
+  --text:      #F0EFFB;              /* testo primario */
+  --text2:     rgba(240,239,251,.6); /* testo secondario */
+  --text3:     rgba(240,239,251,.35);/* testo terziario, label, hint */
+
+  /* ── Shape ───────────────────────────────── */
+  --radius:    14px;   /* card, modal, upload zone */
+  --radius-sm: 8px;    /* button, input, badge, chip */
+
+  /* ── Motion ──────────────────────────────── */
+  --transition: .18s cubic-bezier(.4,0,.2,1);
+  --spring:     .22s cubic-bezier(.34,1.56,.64,1);  /* modal pop, button lift */
+
+  /* ── Spacing scale (4px base) ────────────── */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s9: 36px;
+  --s12: 48px;
+  --s16: 64px;
+}
+
+/* ── Doc chrome ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Doc layout ─────────────────────────────────────────────────── */
+.ds-shell { display: flex; min-height: 100vh; }
+
+.ds-nav {
+  width: 220px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  padding: 28px 0 40px;
+}
+.ds-nav-logo {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.ds-nav-logo .brand {
+  font-size: 16px; font-weight: 800; letter-spacing: -.03em;
+  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.ds-nav-logo .sub { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: .05em; }
+.ds-nav-section { padding: 16px 20px 6px; font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
+.ds-nav a {
+  display: block; padding: 7px 20px; font-size: 13px; font-weight: 500;
+  color: var(--text2); text-decoration: none; transition: var(--transition);
+  border-left: 2px solid transparent;
+}
+.ds-nav a:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.ds-nav a.active { color: var(--violet2); border-left-color: var(--violet2); background: rgba(124,58,237,.06); }
+
+.ds-main { flex: 1; padding: 48px 56px 96px; max-width: 900px; }
+
+/* ── Section headers ────────────────────────────────────────────── */
+.ds-section {
+  margin-bottom: 64px;
+  scroll-margin-top: 32px;
+}
+.ds-section-eyebrow {
+  font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: .12em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.ds-section-title {
+  font-size: 28px; font-weight: 900; letter-spacing: -.03em; margin-bottom: 6px;
+}
+.ds-section-desc { font-size: 14px; color: var(--text2); max-width: 600px; margin-bottom: 32px; line-height: 1.7; }
+
+.ds-subsection { margin-bottom: 40px; }
+.ds-subsection-title {
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text3); margin-bottom: 16px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+
+/* ── Swatch grid ────────────────────────────────────────────────── */
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.swatch {
+  border-radius: var(--radius-sm); overflow: hidden;
+  border: 1px solid var(--border);
+}
+.swatch-color { height: 56px; }
+.swatch-info { padding: 10px 12px; background: var(--surface2); }
+.swatch-name { font-size: 12px; font-weight: 700; color: var(--text); }
+.swatch-hex  { font-size: 11px; color: var(--text3); font-variant-numeric: tabular-nums; margin-top: 2px; font-family: "SF Mono", "Fira Code", monospace; }
+.swatch-role { font-size: 10px; color: var(--text3); margin-top: 3px; line-height: 1.4; }
+
+/* ── Gradient swatch ────────────────────────────────────────────── */
+.grad-swatch {
+  border-radius: var(--radius-sm); overflow: hidden;
+  border: 1px solid var(--border); margin-bottom: 12px;
+}
+.grad-swatch-bar { height: 48px; }
+.grad-swatch-info { padding: 10px 12px; background: var(--surface2); }
+.grad-swatch-name { font-size: 12px; font-weight: 700; color: var(--text); }
+.grad-swatch-code { font-size: 11px; color: var(--text3); font-family: "SF Mono","Fira Code",monospace; margin-top: 4px; word-break: break-all; }
+
+/* ── Type specimens ─────────────────────────────────────────────── */
+.type-row {
+  display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+}
+.type-row:last-child { border-bottom: none; }
+.type-meta { width: 160px; flex-shrink: 0; }
+.type-label { font-size: 11px; font-weight: 700; color: var(--text3); }
+.type-spec  { font-size: 10px; color: var(--text3); font-family: monospace; margin-top: 3px; line-height: 1.5; }
+.type-sample { flex: 1; }
+
+/* ── Spacing table ──────────────────────────────────────────────── */
+.spacing-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.spacing-row:last-child { border-bottom: none; }
+.spacing-token { font-size: 11px; font-family: monospace; color: var(--violet2); width: 48px; flex-shrink: 0; }
+.spacing-px    { font-size: 11px; color: var(--text3); width: 32px; flex-shrink: 0; }
+.spacing-bar-wrap { flex: 1; }
+.spacing-bar   { height: 8px; background: var(--grad); border-radius: 99px; opacity: .7; }
+.spacing-usage { font-size: 11px; color: var(--text3); width: 200px; flex-shrink: 0; }
+
+/* ── Radius table ───────────────────────────────────────────────── */
+.radius-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+.radius-item { text-align: center; }
+.radius-box {
+  background: var(--surface2); border: 1px solid var(--border2);
+  width: 72px; height: 72px; margin: 0 auto 8px;
+}
+.radius-label { font-size: 11px; font-weight: 700; color: var(--text2); }
+.radius-value { font-size: 10px; color: var(--text3); font-family: monospace; }
+
+/* ── Motion table ───────────────────────────────────────────────── */
+.motion-row {
+  display: flex; align-items: center; gap: 16px; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.motion-row:last-child { border-bottom: none; }
+.motion-token { font-size: 11px; font-family: monospace; color: var(--violet2); width: 100px; flex-shrink: 0; }
+.motion-value { font-size: 11px; color: var(--text3); font-family: monospace; flex: 1; }
+.motion-usage { font-size: 11px; color: var(--text2); width: 260px; }
+.motion-demo  { width: 40px; height: 40px; background: var(--grad); border-radius: var(--radius-sm); cursor: pointer; }
+
+/* ── Component preview areas ────────────────────────────────────── */
+.preview {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  margin-bottom: 12px;
+}
+.preview-dark { background: var(--bg); }
+.preview-row  { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.preview-row:last-child { margin-bottom: 0; }
+
+/* ── Code block ─────────────────────────────────────────────────── */
+.code-block {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+  font-size: 12px; font-family: "SF Mono","Fira Code","Consolas",monospace;
+  color: var(--text2); line-height: 1.7; overflow-x: auto;
+  margin-bottom: 12px; white-space: pre;
+}
+.code-block .kw  { color: var(--violet2); }
+.code-block .val { color: var(--teal2); }
+.code-block .cm  { color: var(--text3); }
+
+/* ── Do / Don't ─────────────────────────────────────────────────── */
+.dodont { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.do-box, .dont-box { border-radius: var(--radius-sm); padding: 16px; }
+.do-box   { border: 1px solid rgba(16,185,129,.25); background: rgba(16,185,129,.05); }
+.dont-box { border: 1px solid rgba(244,63,94,.25);  background: rgba(244,63,94,.05); }
+.do-box   .dd-title { color: var(--green); font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+.dont-box .dd-title { color: var(--rose);  font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+.dd-item { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 6px; display: flex; gap: 8px; }
+.dd-icon { flex-shrink: 0; }
+
+/* ── Annotation chip ────────────────────────────────────────────── */
+.anno {
+  display: inline-block; font-size: 10px; font-weight: 700; font-family: monospace;
+  background: rgba(124,58,237,.15); color: var(--violet2);
+  border: 1px solid rgba(124,58,237,.25); border-radius: 4px;
+  padding: 1px 6px; margin-left: 6px; vertical-align: middle;
+}
+
+/* ════════════════════════════════════════════════════════════
+   COMPONENT ATOMS — copia diretta dall'app
+════════════════════════════════════════════════════════════ */
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  border: none; transition: var(--transition); font-family: inherit;
+  letter-spacing: -.01em;
+}
+.btn-primary { background: var(--grad); color: #fff; }
+.btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { color: var(--text); border-color: var(--text3); }
+.btn-danger { background: rgba(244,63,94,.12); color: var(--rose); border: 1px solid rgba(244,63,94,.2); }
+.btn-danger:hover { background: rgba(244,63,94,.2); }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.btn-hl { background: rgba(168,85,247,.1); color: var(--violet2); border: 1px solid rgba(168,85,247,.25); border-radius: var(--radius-sm); padding: 5px 10px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.badge-monthly { background: rgba(20,184,166,.12); color: var(--teal2); border: 1px solid rgba(20,184,166,.2); }
+.badge-annual  { background: rgba(168,85,247,.12); color: var(--violet2); border: 1px solid rgba(168,85,247,.2); }
+.badge-teal    { background: rgba(20,184,166,.12); color: var(--teal2); border: 1px solid rgba(20,184,166,.2); }
+
+/* Semaforo */
+.semaforo { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 700; }
+.semaforo-verde  { background: rgba(16,185,129,.12); color: var(--green);  border: 1px solid rgba(16,185,129,.25); }
+.semaforo-giallo { background: rgba(245,158,11,.12);  color: var(--amber);  border: 1px solid rgba(245,158,11,.25); }
+.semaforo-rosso  { background: rgba(244,63,94,.12);   color: var(--rose);   border: 1px solid rgba(244,63,94,.25); }
+
+/* Header badge */
+.header-badge { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); border: 1px solid rgba(20,184,166,.3); background: rgba(20,184,166,.08); border-radius: 99px; padding: 5px 12px; }
+
+/* Cat dot */
+.cat-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+/* Inputs */
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+label { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: .04em; }
+input[type="text"], input[type="number"], select {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  color: var(--text); font-size: 14px; font-family: inherit;
+  transition: var(--transition); outline: none; width: 100%;
+}
+input:focus, select:focus { border-color: var(--violet2); box-shadow: 0 0 0 3px rgba(124,58,237,.18); }
+select option { background: var(--surface2); }
+
+/* Card */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+.card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); margin-bottom: 16px; }
+
+/* Agent card */
+.agent-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; }
+.agent-card.active { border-color: rgba(124,58,237,.5); background: rgba(124,58,237,.08); }
+.agent-card.done   { border-color: rgba(16,185,129,.4); background: rgba(16,185,129,.06); }
+.agent-name   { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 3px; }
+.agent-status { font-size: 11px; color: var(--text3); }
+.agent-card.active .agent-status { color: var(--violet2); }
+.agent-card.done   .agent-status { color: var(--green); }
+.agent-icon { font-size: 20px; margin-bottom: 6px; }
+
+/* Upload zone */
+.upload-zone { border: 2px dashed var(--border2); border-radius: var(--radius); padding: 36px 24px; text-align: center; background: var(--grad-soft); }
+.upload-icon  { font-size: 36px; margin-bottom: 10px; }
+.upload-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.upload-hint  { font-size: 12px; color: var(--text3); }
+
+/* Attention box */
+.attention-box { background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.25); border-radius: var(--radius-sm); padding: 14px 16px; }
+.att-title     { font-size: 12px; font-weight: 700; color: var(--amber); margin-bottom: 6px; }
+
+/* Summary strip */
+.expenses-summary { background: var(--grad-soft); border: 1px solid rgba(124,58,237,.2); border-radius: var(--radius); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; }
+.summary-label  { font-size: 13px; color: var(--text2); font-weight: 600; }
+.summary-amount { font-size: 32px; font-weight: 900; letter-spacing: -.03em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.summary-sub    { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* Report item */
+.report-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+.report-item.highlight { border-color: rgba(20,184,166,.3); background: rgba(20,184,166,.07); }
+.report-item-label { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.report-item-value { font-size: 16px; font-weight: 700; color: var(--text); }
+.report-item.highlight .report-item-value { color: var(--teal2); font-size: 22px; }
+
+/* Spinner */
+.spinner { width: 44px; height: 44px; border-radius: 50%; border: 3px solid rgba(255,255,255,.08); border-top-color: var(--violet2); animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Divider */
+.divider { display: flex; align-items: center; gap: 14px; color: var(--text3); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Tab bar */
+.tabs-demo { display: flex; gap: 4px; border-bottom: 1px solid var(--border); }
+.tab-btn-demo { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; border: 1px solid transparent; border-bottom: none; background: transparent; color: var(--text2); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; position: relative; bottom: -1px; }
+.tab-btn-demo.active { color: var(--text); background: var(--surface); border-color: var(--border); border-bottom-color: var(--surface); }
+
+/* Modal */
+.modal-demo { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); max-width: 480px; box-shadow: 0 24px 64px rgba(0,0,0,.6); }
+.modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 22px 24px 16px; border-bottom: 1px solid var(--border); }
+.modal-title    { font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+.modal-subtitle { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.modal-close    { background: transparent; border: 1px solid var(--border2); color: var(--text3); border-radius: var(--radius-sm); width: 30px; height: 30px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; font-family: inherit; }
+.modal-body { padding: 20px 24px 24px; }
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .ds-nav { display: none; }
+  .ds-main { padding: 32px 20px 64px; }
+}
+@media (max-width: 600px) {
+  .dodont { grid-template-columns: 1fr; }
+  .swatch-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="ds-shell">
+
+<!-- ── SIDEBAR NAV ────────────────────────────────────────────────── -->
+<nav class="ds-nav">
+  <div class="ds-nav-logo">
+    <div class="brand">FinanceScope</div>
+    <div class="sub">Design System v1.0</div>
+  </div>
+
+  <div class="ds-nav-section">Fondamenta</div>
+  <a href="#tokens">Tokens</a>
+  <a href="#colori">Colori</a>
+  <a href="#tipografia">Tipografia</a>
+  <a href="#spaziatura">Spaziatura</a>
+  <a href="#forma">Forma & Moto</a>
+
+  <div class="ds-nav-section">Atomic Design</div>
+  <a href="#atoms">Atomi</a>
+  <a href="#molecules">Molecole</a>
+  <a href="#organisms">Organismi</a>
+
+  <div class="ds-nav-section">Principi</div>
+  <a href="#voice">Voce & Tono</a>
+  <a href="#accessibility">Accessibilità</a>
+  <a href="#patterns">Pattern vietati</a>
+</nav>
+
+<!-- ── MAIN ──────────────────────────────────────────────────────── -->
+<main class="ds-main">
+
+  <!-- COVER -->
+  <div style="margin-bottom:64px; padding-bottom:40px; border-bottom:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;">Hagenthon 2026 · Inclusione Finanziaria</div>
+    <h1 style="font-size:40px;font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:12px;">
+      <span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;">FinanceScope</span><br>Design System
+    </h1>
+    <p style="font-size:15px;color:var(--text2);max-width:540px;line-height:1.7;">Documento di riferimento per colori, tipografia, spaziatura, e tutti i componenti che compongono l'interfaccia — dagli atomi agli organismi.</p>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;">
+      <span class="badge badge-teal">v1.0</span>
+      <span class="badge badge-monthly">Dark-first</span>
+      <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(168,85,247,.12);color:var(--violet2);border:1px solid rgba(168,85,247,.2);">Inter · Single font</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       TOKENS
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="tokens">
+    <div class="ds-section-eyebrow">Fondamenta</div>
+    <h2 class="ds-section-title">Design Tokens</h2>
+    <p class="ds-section-desc">I token sono le variabili CSS radice dell'app. Ogni scelta visiva — colore, spazio, raggio, velocità — è definita qui e consumata dai componenti. Non usare mai valori hardcoded: cita sempre il token.</p>
+
+    <div class="code-block"><span class="cm">/* Tutti i token sono definiti in :root e importati come var(--nome) */</span>
+
+<span class="cm">/* Backgrounds */</span>
+<span class="kw">--bg</span>:        <span class="val">#0D0D14</span>;    <span class="cm">/* canvas */</span>
+<span class="kw">--surface</span>:   <span class="val">#16161F</span>;    <span class="cm">/* card livello 1 */</span>
+<span class="kw">--surface2</span>:  <span class="val">#1E1E2C</span>;    <span class="cm">/* card livello 2, input */</span>
+
+<span class="cm">/* Borders */</span>
+<span class="kw">--border</span>:    <span class="val">rgba(255,255,255,0.08)</span>;
+<span class="kw">--border2</span>:   <span class="val">rgba(255,255,255,0.14)</span>;
+
+<span class="cm">/* Brand */</span>
+<span class="kw">--violet</span>:    <span class="val">#7C3AED</span>;  <span class="kw">--violet2</span>: <span class="val">#A855F7</span>;
+<span class="kw">--teal</span>:      <span class="val">#14B8A6</span>;  <span class="kw">--teal2</span>:   <span class="val">#2DD4BF</span>;
+
+<span class="cm">/* Semantic */</span>
+<span class="kw">--rose</span>:   <span class="val">#F43F5E</span>;  <span class="kw">--amber</span>: <span class="val">#F59E0B</span>;  <span class="kw">--green</span>: <span class="val">#10B981</span>;
+
+<span class="cm">/* Text */</span>
+<span class="kw">--text</span>:   <span class="val">#F0EFFB</span>;
+<span class="kw">--text2</span>:  <span class="val">rgba(240,239,251,.6)</span>;
+<span class="kw">--text3</span>:  <span class="val">rgba(240,239,251,.35)</span>;
+
+<span class="cm">/* Shape */</span>
+<span class="kw">--radius</span>:    <span class="val">14px</span>;   <span class="kw">--radius-sm</span>: <span class="val">8px</span>;
+
+<span class="cm">/* Motion */</span>
+<span class="kw">--transition</span>: <span class="val">.18s cubic-bezier(.4,0,.2,1)</span>;
+<span class="kw">--spring</span>:     <span class="val">.22s cubic-bezier(.34,1.56,.64,1)</span>;</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       COLORI
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="colori">
+    <div class="ds-section-eyebrow">Fondamenta</div>
+    <h2 class="ds-section-title">Colori</h2>
+    <p class="ds-section-desc">Palette dark-first con due assi cromatici: violetto (brand, interazione, AI) e teal (valori finanziari, successo). I colori semantici non sono decorativi: ogni colore ha un significato preciso e non viene riutilizzato fuori dal suo dominio.</p>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Backgrounds — gerarchia di profondità</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#0D0D14;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">bg</div>
+            <div class="swatch-hex">#0D0D14</div>
+            <div class="swatch-role">Canvas principale della pagina</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#16161F;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">surface</div>
+            <div class="swatch-hex">#16161F</div>
+            <div class="swatch-role">Card e pannelli di primo livello</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#1E1E2C;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">surface2</div>
+            <div class="swatch-hex">#1E1E2C</div>
+            <div class="swatch-role">Input, card annidate, modal body</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Brand — violetto × teal</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#7C3AED;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">violet</div>
+            <div class="swatch-hex">#7C3AED</div>
+            <div class="swatch-role">Gradiente base, anchor</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#A855F7;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">violet2</div>
+            <div class="swatch-hex">#A855F7</div>
+            <div class="swatch-role">Focus ring, spinner, agente attivo</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#14B8A6;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">teal</div>
+            <div class="swatch-hex">#14B8A6</div>
+            <div class="swatch-role">Gradiente finale, header badge</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#2DD4BF;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">teal2</div>
+            <div class="swatch-hex">#2DD4BF</div>
+            <div class="swatch-role">Valori mensili, highlight report</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Semantic — un colore, un significato</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#10B981;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">green</div>
+            <div class="swatch-hex">#10B981</div>
+            <div class="swatch-role">Successo, agente done, semaforo 🟢</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#F59E0B;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">amber</div>
+            <div class="swatch-hex">#F59E0B</div>
+            <div class="swatch-role">Warning, attention box, semaforo 🟡</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#F43F5E;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">rose</div>
+            <div class="swatch-hex">#F43F5E</div>
+            <div class="swatch-role">Danger, btn-danger, semaforo 🔴</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Text — tre livelli di gerarchia</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#F0EFFB;border:1px solid rgba(255,255,255,.1);"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">text</div>
+            <div class="swatch-hex">#F0EFFB</div>
+            <div class="swatch-role">Testo primario, heading, valore</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:rgba(240,239,251,.6);"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">text2</div>
+            <div class="swatch-hex">rgba(F0EFFB, 60%)</div>
+            <div class="swatch-role">Testo secondario, descrizioni</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:rgba(240,239,251,.35);"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">text3</div>
+            <div class="swatch-hex">rgba(F0EFFB, 35%)</div>
+            <div class="swatch-role">Label, hint, placeholder, header tab</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Gradienti</div>
+      <div class="grad-swatch">
+        <div class="grad-swatch-bar" style="background:linear-gradient(135deg,#7C3AED 0%,#A855F7 50%,#14B8A6 100%);"></div>
+        <div class="grad-swatch-info">
+          <div class="grad-swatch-name">--grad · Gradient principale</div>
+          <div class="grad-swatch-code">linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #14B8A6 100%)</div>
+        </div>
+      </div>
+      <div class="grad-swatch">
+        <div class="grad-swatch-bar" style="background:linear-gradient(135deg,rgba(124,58,237,.18) 0%,rgba(20,184,166,.12) 100%);"></div>
+        <div class="grad-swatch-info">
+          <div class="grad-swatch-name">--grad-soft · Gradient sfumato (sfondi)</div>
+          <div class="grad-swatch-code">linear-gradient(135deg, rgba(124,58,237,.18) 0%, rgba(20,184,166,.12) 100%)</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:8px;">Il gradient principale viene applicato su: logo, bottone primario, importi totali. Non usarlo come sfondo di sezioni intere — riserva --grad-soft per quelle.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       TIPOGRAFIA
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="tipografia">
+    <div class="ds-section-eyebrow">Fondamenta</div>
+    <h2 class="ds-section-title">Tipografia</h2>
+    <p class="ds-section-desc">Unico typeface: <strong>Inter</strong>. Scelto per la leggibilità a piccole dimensioni, il supporto a font-variant-numeric tabular, e la personalità neutra ma moderna adatta a un tool finanziario. Lo scale tipografico segue una progressione 10→11→12→13→14→15→16→17→18→22→28→32→40px.</p>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Scale</div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Display / Logo</div>
+          <div class="type-spec">20px · weight 800<br>tracking -0.03em</div>
+        </div>
+        <div class="type-sample" style="font-size:20px;font-weight:800;letter-spacing:-.03em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;">FinanceScope</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Hero title</div>
+          <div class="type-spec">28–40px · weight 900<br>tracking -0.04em</div>
+        </div>
+        <div class="type-sample" style="font-size:32px;font-weight:900;letter-spacing:-.04em;">Le tue spese ricorrenti</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Section title</div>
+          <div class="type-spec">22px · weight 800<br>tracking -0.02em</div>
+        </div>
+        <div class="type-sample" style="font-size:22px;font-weight:800;letter-spacing:-.02em;">Analisi Documento</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Card/modal title</div>
+          <div class="type-spec">17–18px · weight 800<br>tracking -0.02em</div>
+        </div>
+        <div class="type-sample" style="font-size:17px;font-weight:800;letter-spacing:-.02em;">Bolletta Enel — Marzo 2025</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Body / UI</div>
+          <div class="type-spec">14–15px · weight 400<br>line-height 1.6</div>
+        </div>
+        <div class="type-sample" style="font-size:14px;color:var(--text2);line-height:1.6;">Paghi circa 45 € al mese per la bolletta della luce. Il contratto scade il 31 dicembre 2025 e si rinnova automaticamente.</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Label / eyebrow</div>
+          <div class="type-spec">11–13px · weight 700<br>tracking 0.06–0.12em<br>uppercase</div>
+        </div>
+        <div class="type-sample" style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;">Categoria · Frequenza · Al mese</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Micro / hint</div>
+          <div class="type-spec">10–11px · weight 500<br>color: text3</div>
+        </div>
+        <div class="type-sample" style="font-size:11px;font-weight:500;color:var(--text3);">Solo PDF · pari a € 1.200,00 all'anno</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Importo hero</div>
+          <div class="type-spec">32px · weight 900<br>tracking -0.03em<br>font-variant-numeric: tabular-nums<br>gradient clip</div>
+        </div>
+        <div class="type-sample" style="font-size:32px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;">€ 487,50</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Codice / token</div>
+          <div class="type-spec">11–12px<br>font: SF Mono / Fira Code<br>color: violet2</div>
+        </div>
+        <div class="type-sample" style="font-size:12px;font-family:'SF Mono','Fira Code',monospace;color:var(--violet2);">--violet2: #A855F7</div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Regole tipografiche</div>
+      <div class="dodont">
+        <div class="do-box">
+          <div class="dd-title">✓ DA FARE</div>
+          <div class="dd-item"><span class="dd-icon">✓</span>font-variant-numeric: tabular-nums su tutti gli importi monetari per allineamento verticale</div>
+          <div class="dd-item"><span class="dd-icon">✓</span>Pesi 700–900 solo per heading; 600 per label; 400–500 per il corpo</div>
+          <div class="dd-item"><span class="dd-icon">✓</span>Letter-spacing negativo (-0.02em / -0.03em) sui titoli grandi per densità ottica</div>
+          <div class="dd-item"><span class="dd-icon">✓</span>Line-height 1.6–1.7 su tutto il testo di descrizione</div>
+          <div class="dd-item"><span class="dd-icon">✓</span>Sentence case ovunque — niente Title Case arbitrario</div>
+        </div>
+        <div class="dont-box">
+          <div class="dd-title">✗ DA EVITARE</div>
+          <div class="dd-item"><span class="dd-icon">✗</span>Accent su una singola parola nel titolo (es. una parola in violet in mezzo a testo bianco)</div>
+          <div class="dd-item"><span class="dd-icon">✗</span>ALL CAPS su testi lunghi — solo label brevi e badge</div>
+          <div class="dd-item"><span class="dd-icon">✗</span>Mischiare monospace e Inter in un'unica frase di UI</div>
+          <div class="dd-item"><span class="dd-icon">✗</span>Font size sotto i 10px per testo leggibile</div>
+          <div class="dd-item"><span class="dd-icon">✗</span>Gradient clip su testi inferiori a 14px — illeggibile su retina</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SPAZIATURA
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="spaziatura">
+    <div class="ds-section-eyebrow">Fondamenta</div>
+    <h2 class="ds-section-title">Spaziatura</h2>
+    <p class="ds-section-desc">Base 4px. Tutti i margini, padding e gap sono multipli di 4. I token --s* non sono obbligatori nel CSS inline, ma ogni valore usato nell'app deve rientrare in questa scala.</p>
+
+    <div class="preview" style="padding:20px;">
+      <div class="spacing-row"><span class="spacing-token">--s1</span><span class="spacing-px">4px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:4px;"></div></div><span class="spacing-usage">gap tra micro-elementi (cat-dot + testo)</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s2</span><span class="spacing-px">8px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:8px;"></div></div><span class="spacing-usage">gap tra badge in preview-row</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s3</span><span class="spacing-px">12px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:12px;"></div></div><span class="spacing-usage">gap cards agents-row</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s4</span><span class="spacing-px">16px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:16px;"></div></div><span class="spacing-usage">margin bottom card-title, btn-row</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s5</span><span class="spacing-px">20px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:20px;"></div></div><span class="spacing-usage">margin bottom card, padding summary strip</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s6</span><span class="spacing-px">24px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:24px;"></div></div><span class="spacing-usage">padding card, modal body, padding tabella</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s8</span><span class="spacing-px">32px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:32px;"></div></div><span class="spacing-usage">padding header, main top, section title margin</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s9</span><span class="spacing-px">36px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:36px;"></div></div><span class="spacing-usage">padding verticale upload zone</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s12</span><span class="spacing-px">48px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:48px;"></div></div><span class="spacing-usage">padding top main, design system sections</span></div>
+      <div class="spacing-row"><span class="spacing-token">--s16</span><span class="spacing-px">64px</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:64px;"></div></div><span class="spacing-usage">padding bottom pagina, gap sezione DS</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FORMA & MOTO
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="forma">
+    <div class="ds-section-eyebrow">Fondamenta</div>
+    <h2 class="ds-section-title">Forma & Moto</h2>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Border radius</div>
+      <div class="radius-grid">
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:0;"></div>
+          <div class="radius-label">0</div>
+          <div class="radius-value">tabella interna</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:8px;"></div>
+          <div class="radius-label">--radius-sm</div>
+          <div class="radius-value">8px · btn, input, badge, agent card</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:14px;"></div>
+          <div class="radius-label">--radius</div>
+          <div class="radius-value">14px · card, modal, upload zone</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:999px;height:36px;width:72px;"></div>
+          <div class="radius-label">99px</div>
+          <div class="radius-value">pill · badge, semaforo, header-badge</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Transizioni</div>
+      <div class="preview" style="padding:20px;">
+        <div class="motion-row">
+          <span class="motion-token">--transition</span>
+          <span class="motion-value">.18s cubic-bezier(.4,0,.2,1)</span>
+          <span class="motion-usage">Tutte le transizioni UI standard: hover, focus, color, border, background</span>
+        </div>
+        <div class="motion-row">
+          <span class="motion-token">--spring</span>
+          <span class="motion-value">.22s cubic-bezier(.34,1.56,.64,1)</span>
+          <span class="motion-usage">Apertura modal (scale + translateY), lift del bottone primario</span>
+        </div>
+        <div class="motion-row">
+          <span class="motion-token">spin</span>
+          <span class="motion-value">.7s linear infinite</span>
+          <span class="motion-usage">Spinner caricamento agenti — solo quando l'AI è in esecuzione</span>
+        </div>
+        <div class="motion-row">
+          <span class="motion-token">modal-in</span>
+          <span class="motion-value">scale(.94)→(1) + translateY(12px)→0 + opacity</span>
+          <span class="motion-usage">Entrata modal highlights — unico momento di spring nell'app</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:8px;">Principio: il moto deve rispondere all'azione dell'utente. Nessun fade automatico all'ingresso di sezioni, nessun parallax, nessun loop. L'unico moto non-triggered è lo spinner, che comunica attesa.</p>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Borders & elevazione</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">L'app non usa box-shadow per la gerarchia visiva. L'elevazione è comunicata esclusivamente tramite il contrasto di background tra livelli (<code style="font-family:monospace;font-size:11px;color:var(--violet2);">bg → surface → surface2</code>) e l'intensità del bordo (border → border2).</p>
+      <p style="font-size:12px;color:var(--text3);">Eccezione: il modal usa <code style="font-family:monospace;font-size:11px;color:var(--violet2);">box-shadow: 0 24px 64px rgba(0,0,0,.6)</code> per staccarsi dall'overlay.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       ATOMS
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="atoms">
+    <div class="ds-section-eyebrow">Atomic Design</div>
+    <h2 class="ds-section-title">Atomi</h2>
+    <p class="ds-section-desc">Gli atomi sono i componenti più piccoli e non ulteriormente divisibili: non dipendono da altri componenti e non hanno logica di stato propria.</p>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Bottoni</div>
+      <div class="preview">
+        <div class="preview-row">
+          <button class="btn btn-primary">🤖 Analizza con AI</button>
+          <button class="btn btn-primary" disabled>🤖 In elaborazione…</button>
+        </div>
+        <div class="preview-row">
+          <button class="btn btn-ghost">↩ Torna indietro</button>
+          <button class="btn btn-danger btn-sm">✕</button>
+          <button class="btn-hl">✦ Dettagli</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Badge</div>
+      <div class="preview">
+        <div class="preview-row" style="align-items:center;">
+          <span class="badge badge-monthly">Mensile</span>
+          <span class="badge badge-annual">Annuale</span>
+          <span class="badge badge-teal">v1.0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Semaforo AI</div>
+      <div class="preview">
+        <div class="preview-row" style="align-items:center;flex-wrap:wrap;gap:10px;">
+          <span class="semaforo semaforo-verde">🟢 Documento chiaro e leggibile</span>
+          <span class="semaforo semaforo-giallo">🟡 Alcune clausole da verificare</span>
+          <span class="semaforo semaforo-rosso">🔴 Clausole complesse rilevate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Category dot — palette categorie</div>
+      <div class="preview">
+        <div class="preview-row" style="flex-wrap:wrap;gap:16px;">
+          <span><span class="cat-dot" style="background:#A855F7;"></span><span style="font-size:13px;color:var(--text2);">Streaming #A855F7</span></span>
+          <span><span class="cat-dot" style="background:#14B8A6;"></span><span style="font-size:13px;color:var(--text2);">Utenze #14B8A6</span></span>
+          <span><span class="cat-dot" style="background:#F59E0B;"></span><span style="font-size:13px;color:var(--text2);">Casa #F59E0B</span></span>
+          <span><span class="cat-dot" style="background:#F43F5E;"></span><span style="font-size:13px;color:var(--text2);">Assicurazioni #F43F5E</span></span>
+          <span><span class="cat-dot" style="background:#3B82F6;"></span><span style="font-size:13px;color:var(--text2);">Abbonamenti #3B82F6</span></span>
+          <span><span class="cat-dot" style="background:#10B981;"></span><span style="font-size:13px;color:var(--text2);">Trasporti #10B981</span></span>
+          <span><span class="cat-dot" style="background:#94A3B8;"></span><span style="font-size:13px;color:var(--text2);">Altro #94A3B8</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Spinner</div>
+      <div class="preview">
+        <div class="preview-row" style="align-items:center;gap:16px;">
+          <div class="spinner"></div>
+          <span style="font-size:14px;color:var(--text2);font-weight:600;">Agenti al lavoro…</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Input & Select</div>
+      <div class="preview">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:500px;">
+          <div class="form-group">
+            <label>Nome della spesa</label>
+            <input type="text" placeholder="es. Netflix, Affitto…" />
+          </div>
+          <div class="form-group">
+            <label>Importo (€)</label>
+            <input type="number" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Frequenza</label>
+            <select><option>Mensile</option><option>Annuale</option></select>
+          </div>
+          <div class="form-group">
+            <label>Categoria</label>
+            <select><option>🎬 Streaming</option><option>⚡ Utenze</option><option>🏠 Casa</option></select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MOLECULES
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="molecules">
+    <div class="ds-section-eyebrow">Atomic Design</div>
+    <h2 class="ds-section-title">Molecole</h2>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Upload zone</div>
+      <div class="preview preview-dark">
+        <div class="upload-zone">
+          <div class="upload-icon">📎</div>
+          <div class="upload-title">Trascina qui il tuo PDF o clicca per sceglierlo</div>
+          <div class="upload-hint">Bollette, estratti, contratti — qualsiasi documento con spese ricorrenti · Solo PDF</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Agent card — 3 stati</div>
+      <div class="preview preview-dark">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <div class="agent-card">
+            <div class="agent-icon">🔍</div>
+            <div class="agent-name">Extractor Agent</div>
+            <div class="agent-status">In attesa…</div>
+          </div>
+          <div class="agent-card active">
+            <div class="agent-icon">🗂️</div>
+            <div class="agent-name">Formatter Agent</div>
+            <div class="agent-status">In esecuzione…</div>
+          </div>
+          <div class="agent-card done">
+            <div class="agent-icon">✅</div>
+            <div class="agent-name">Validator Agent</div>
+            <div class="agent-status">Completato ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Attention box</div>
+      <div class="preview preview-dark">
+        <div class="attention-box">
+          <div class="att-title">⚠️ Da verificare</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.6;">Il contratto prevede una penale di recesso anticipato di 50 € se disdetto prima della scadenza naturale del 31 dicembre 2025.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Report item — normale e highlighted</div>
+      <div class="preview preview-dark">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="report-item highlight">
+            <div class="report-item-label">Importo mensile</div>
+            <div class="report-item-value" style="color:var(--teal2);font-size:22px;">€ 78,40</div>
+          </div>
+          <div class="report-item">
+            <div class="report-item-label">Scadenza pagamento</div>
+            <div class="report-item-value">15 aprile 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Divider con testo</div>
+      <div class="preview preview-dark">
+        <div class="divider">oppure aggiungi manualmente</div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Summary strip</div>
+      <div class="preview preview-dark">
+        <div class="expenses-summary">
+          <div>
+            <div class="summary-label">Spesa mensile totale</div>
+            <div class="summary-amount">€ 487,50</div>
+            <div class="summary-sub">pari a € 5.850,00 all'anno</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="summary-label">Voci attive</div>
+            <div class="summary-amount" style="font-size:28px;">7</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       ORGANISMS
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="organisms">
+    <div class="ds-section-eyebrow">Atomic Design</div>
+    <h2 class="ds-section-title">Organismi</h2>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Tab bar</div>
+      <div class="preview preview-dark" style="padding:0;overflow:hidden;">
+        <div style="padding:16px 24px 0;">
+          <div class="tabs-demo">
+            <button class="tab-btn-demo active">💳 Tracker Spese</button>
+            <button class="tab-btn-demo">📄 Analisi Documento</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <div class="ds-subsection-title">Modal highlights</div>
+      <div class="preview preview-dark">
+        <div class="modal-demo">
+          <div class="modal-header">
+            <div>
+              <div class="modal-title">Bolletta Enel</div>
+              <div class="modal-subtitle">Da: Bolletta Enel Marzo 2025</div>
+            </div>
+            <button class="modal-close">✕</button>
+          </div>
+          <div class="modal-body">
+            <span class="semaforo semaforo-giallo" style="margin-bottom:14px;display:inline-flex;">🟡 Alcune clausole da verificare</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+              <div class="report-item highlight" style="grid-column:1/-1;">
+                <div class="report-item-label">Importo mensile</div>
+                <div class="report-item-value" style="color:var(--teal2);font-size:20px;">€ 78,40</div>
+              </div>
+              <div class="report-item">
+                <div class="report-item-label">Scadenza</div>
+                <div class="report-item-value" style="font-size:14px;">15 aprile 2025</div>
+              </div>
+              <div class="report-item">
+                <div class="report-item-label">Fornitore</div>
+                <div class="report-item-value" style="font-size:14px;">Enel Energia</div>
+              </div>
+            </div>
+            <div class="attention-box">
+              <div class="att-title">⚠️ Da verificare</div>
+              <div style="font-size:12px;color:rgba(245,158,11,.9);">Il contratto è in scadenza il 31 dicembre 2025.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       VOCE & TONO
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="voice">
+    <div class="ds-section-eyebrow">Principi</div>
+    <h2 class="ds-section-title">Voce & Tono</h2>
+    <p class="ds-section-desc">L'app parla a persone con bassa alfabetizzazione finanziaria. Il linguaggio deve essere un alleato, non un ostacolo.</p>
+
+    <div class="dodont">
+      <div class="do-box">
+        <div class="dd-title">✓ COME SCRIVIAMO</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Frase attiva, verbo prima del soggetto: "Paghi 45 € al mese" non "L'importo mensile è di 45 €"</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>CTA che dicono esattamente cosa succede: "Aggiungi spesa" non "Conferma"</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Numeri con simbolo: "€ 78,40" non "EUR 78.40"</div>
+        <div class="dd-item"><span class="dd-icon">✓</span>Sentence case ovunque: "Spesa mensile totale" non "Spesa Mensile Totale"</div>
+      </div>
+      <div class="dont-box">
+        <div class="dd-title">✗ DA EVITARE</div>
+        <div class="dd-item"><span class="dd-icon">✗</span>Gergo finanziario non spiegato: TAEG, spread, F1/F2/F3, quota energia</div>
+        <div class="dd-item"><span class="dd-icon">✗</span>Consigli di investimento o raccomandazioni finanziarie di qualsiasi tipo</div>
+        <div class="dd-item"><span class="dd-icon">✗</span>Testo tecnico dell'AI esposto direttamente all'utente senza riformulazione</div>
+        <div class="dd-item"><span class="dd-icon">✗</span>Abbreviazioni ambigue: "doc", "PDF anal.", "freq."</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       ACCESSIBILITÀ
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="accessibility">
+    <div class="ds-section-eyebrow">Principi</div>
+    <h2 class="ds-section-title">Accessibilità</h2>
+
+    <div class="preview" style="padding:20px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
+        <div>
+          <div style="font-weight:700;color:var(--text);margin-bottom:8px;">Contrasto testo</div>
+          <div style="color:var(--text2);line-height:1.6;">--text su --bg: ≈ 14:1 (AAA)<br>--text2 su --surface: ≈ 5:1 (AA)<br>--text3: solo per testo non informativo (label, hint)</div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--text);margin-bottom:8px;">Focus</div>
+          <div style="color:var(--text2);line-height:1.6;">Focus ring su tutti gli input: box-shadow 0 0 0 3px rgba(124,58,237,.18)<br>Non rimuovere mai outline senza sostituirlo</div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--text);margin-bottom:8px;">Colore non unico segnale</div>
+          <div style="color:var(--text2);line-height:1.6;">Il semaforo usa sempre emoji + testo. I badge usano testo leggibile, non solo dot cromatici.</div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--text);margin-bottom:8px;">Font size minimo</div>
+          <div style="color:var(--text2);line-height:1.6;">10px per micro-label non critiche. 11px per label badge e tabella. 13px per corpo letture brevi. Mai sotto 10px.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PATTERN VIETATI
+  ═══════════════════════════════════════════════════════════════ -->
+  <section class="ds-section" id="patterns">
+    <div class="ds-section-eyebrow">Principi</div>
+    <h2 class="ds-section-title">Pattern vietati</h2>
+    <p class="ds-section-desc">Questi pattern sono la firma dei design generici AI-generated. Evitarli mantiene l'identità visiva di FinanceScope distintiva e riconoscibile.</p>
+
+    <div class="preview" style="padding:20px;">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <span style="color:var(--rose);font-size:18px;flex-shrink:0;">✗</span>
+          <div><div style="font-weight:700;color:var(--text);margin-bottom:3px;">Accent su una parola nel titolo</div><div style="font-size:13px;color:var(--text2);">L'unico uso del gradient clip è sul logo e sugli importi hero.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <span style="color:var(--rose);font-size:18px;flex-shrink:0;">✗</span>
+          <div><div style="font-weight:700;color:var(--text);margin-bottom:3px;">SaaS card kit uniforme</div><div style="font-size:13px;color:var(--text2);">L'app distingue --radius (card grandi) da --radius-sm (button, input) da 99px (pill). L'elevazione è per background contrast, non shadow.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <span style="color:var(--rose);font-size:18px;flex-shrink:0;">✗</span>
+          <div><div style="font-weight:700;color:var(--text);margin-bottom:3px;">Fade-in su ogni sezione al caricamento</div><div style="font-size:13px;color:var(--text2);">L'unico moto non-triggered è lo spinner. Il modal ha una singola animazione di entrata. Nessun scroll-trigger, nessun stagger di card.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <span style="color:var(--rose);font-size:18px;flex-shrink:0;">✗</span>
+          <div><div style="font-weight:700;color:var(--text);margin-bottom:3px;">Gradient wash decorativo su sezioni</div><div style="font-size:13px;color:var(--text2);">--grad-soft è usato solo su upload zone e summary strip. Non come sfondo generico di sezioni.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="color:var(--rose);font-size:18px;flex-shrink:0;">✗</span>
+          <div><div style="font-weight:700;color:var(--text);margin-bottom:3px;">→ appeso ai link e ai bottoni</div><div style="font-size:13px;color:var(--text2);">I CTA descrivono l'azione senza frecce decorative. "Aggiungi spesa" è più chiaro di "Aggiungi spesa →".</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div style="border-top:1px solid var(--border);padding-top:32px;margin-top:32px;font-size:12px;color:var(--text3);">
+    FinanceScope Design System v1.0 · Hagenthon 2026 · Accenture Application Engineering
+  </div>
+
+</main>
+</div>
+
+<script>
+const sections = document.querySelectorAll('.ds-section');
+const navLinks = document.querySelectorAll('.ds-nav a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.ds-nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

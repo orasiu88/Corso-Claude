@@ -22,11 +22,18 @@
 L'utente gestisce tutte le proprie spese periodiche in un unico posto.
 
 **Caricamento da PDF** (funzionalità principale e differenziante)
-L'utente carica qualsiasi documento con costi ricorrenti — bolletta, contratto di abbonamento, mutuo, polizza assicurativa. L'AI non si limita a estrarre l'importo: analizza i vincoli contrattuali, identifica le condizioni economiche rilevanti e produce un set di *tips educativi* pensati per chi non ha familiarità col linguaggio finanziario. Per ogni documento caricato il sistema restituisce:
+L'utente carica qualsiasi documento con costi ricorrenti — bolletta, contratto di abbonamento, mutuo, polizza assicurativa. L'AI non si limita a estrarre l'importo: analizza i vincoli contrattuali, identifica le condizioni economiche rilevanti, rileva le clausole restrittive e produce un set di *tips educativi* pensati per chi non ha familiarità col linguaggio finanziario. Per ogni documento caricato il sistema restituisce:
 - Importo mensile o periodico normalizzato
 - Data di scadenza/rinnovo contrattuale
 - Eventuali variazioni di costo previste (es. adeguamento ISTAT, cambio tariffa in data X)
 - Vincoli da ricordare (penali di recesso, clausole di rinnovo automatico, preavvisi minimi)
+- **Clausole restrittive strutturate** per tipologia e gravità:
+  - 💸 Mora/interessi di ritardo (es. "Ritardo pagamento: commissione di 5€ al giorno")
+  - 🚪 Penale di recesso anticipato
+  - 🔄 Rinnovo automatico con preavviso obbligatorio
+  - 📣 Preavviso minimo per disdetta
+  - 📈 Variazioni di costo programmate (adeguamento ISTAT, fasce orarie)
+  - ℹ️ Altre clausole vincolanti
 - Tips di comprensione in linguaggio semplice ("Questo contratto si rinnova da solo: se vuoi uscire devi disdire almeno 30 giorni prima")
 - Semaforo di chiarezza 🟢/🟡/🔴 generato dal Validator Agent
 
@@ -51,6 +58,7 @@ L'utente carica una bolletta o un contratto e ottiene un report strutturato con 
 - Condizioni economiche rilevanti (prezzo al kWh, tasso, canone base)
 - Variazioni di costo previste e relative date
 - Clausole e vincoli contrattuali importanti
+- **Clausole restrittive rilevate automaticamente**: mora, penali di recesso, rinnovi automatici, preavvisi, variazioni tariffarie — ognuna con tipo, descrizione in linguaggio semplice, eventuale importo e livello di gravità (alta/media/bassa)
 - Semaforo di comprensibilità 🟢/🟡/🔴
 
 Output: visualizzazione inline senza export. Il report può essere usato come punto di partenza prima di aggiungere la spesa al Tab 1.
@@ -171,14 +179,14 @@ Supportare l'educazione alla finanza personale di base, aiutando le persone con 
 | Tab 1 — Caricamento PDF + estrazione spese AI | ✅ Implementato |
 | Tab 1 — Modal "✦ Dettagli" con highlights contratto | ✅ Implementato |
 | Tab 1 — Tips educativi per ogni contratto | ✅ Incluso nell'Extractor Agent |
-| Tab 1 — Inserimento manuale (accordion) | 🔲 Roadmap |
-| Tab 1 — Flusso analisi → conferma aggiunta | 🔲 Roadmap |
-| Tab 1 — Gestione date rinnovo/scadenza per-spesa | 🔲 Roadmap |
+| Tab 1 — Inserimento manuale (accordion) | ✅ Implementato |
+| Tab 1 — Flusso analisi → conferma aggiunta | ✅ Implementato |
+| Tab 1 — Gestione date rinnovo/scadenza per-spesa | ✅ Implementato |
 | Tab 2 — Analisi documento + report AI | ✅ Implementato |
-| Tab 3 — Dashboard budget personalizzabile | 🔲 Roadmap |
-| Tab 3 — Storico spese cronologico | 🔲 Roadmap |
-| Tab 3 — Timeline prossimi pagamenti | 🔲 Roadmap |
-| Sistema alert trasversale (scadenze, tariffe, budget) | 🔲 Roadmap |
+| Tab 3 — Dashboard budget personalizzabile | ✅ Implementato |
+| Tab 3 — Storico spese cronologico | ✅ Implementato |
+| Tab 3 — Timeline prossimi pagamenti | ✅ Implementato |
+| Sistema alert trasversale (scadenze, tariffe, budget) | ✅ Implementato |
 
 ---
 

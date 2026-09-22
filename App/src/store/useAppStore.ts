@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type { AppTab, AsyncStatus, DocumentReport, Expense, HistoryEntry } from '@t/index'
 import { generateId } from '@utils/id'
 
@@ -8,7 +9,7 @@ interface AppState {
 
   // Tab 1 — Expense Tracker
   expenses: Expense[]
-  pendingExpenses: Expense[] // extracted but not yet confirmed
+  pendingExpenses: Expense[] // extracted but not yet confirmed — never persisted
   tab1Status: AsyncStatus
   tab1Error: string | null
   activeModal: Expense | null
@@ -49,117 +50,120 @@ interface AppActions {
 export const monthlyTotal = (expenses: Expense[]) =>
   expenses.reduce((sum, e) => sum + e.monthly_amount, 0)
 
-export const useAppStore = create<AppState & AppActions>((set) => ({
-  // ─── Initial state ────────────────────────────────────────────────────
-  activeTab: 'tab1',
-  expenses: [],
-  pendingExpenses: [],
-  tab1Status: 'idle',
-  tab1Error: null,
-  activeModal: null,
-  tab2Report: null,
-  tab2Status: 'idle',
-  tab2Error: null,
-  budget: (() => {
-    const saved = localStorage.getItem('financescope_budget')
-    return saved ? parseFloat(saved) : null
-  })(),
-  history: [],
-
-  // ─── Actions ──────────────────────────────────────────────────────────
-  setActiveTab: (tab) => set({ activeTab: tab }),
-
-  addExpenses: (expenses) =>
-    set((state) => ({
-      expenses: [...state.expenses, ...expenses],
-      history: [
-        ...state.history,
-        ...expenses.map((e) => ({
-          id: generateId(),
-          date: new Date().toISOString(),
-          action: 'add' as const,
-          expenseName: e.name,
-          amount: e.monthly_amount,
-          source: e.source,
-        })),
-      ],
-    })),
-
-  addManualExpense: (expense) =>
-    set((state) => ({
-      expenses: [...state.expenses, expense],
-      history: [
-        ...state.history,
-        {
-          id: generateId(),
-          date: new Date().toISOString(),
-          action: 'add' as const,
-          expenseName: expense.name,
-          amount: expense.monthly_amount,
-          source: expense.source,
-        },
-      ],
-    })),
-
-  removeExpense: (id) =>
-    set((state) => {
-      const expense = state.expenses.find((e) => e.id === id)
-      return {
-        expenses: state.expenses.filter((e) => e.id !== id),
-        history: expense
-          ? [
-              ...state.history,
-              {
-                id: generateId(),
-                date: new Date().toISOString(),
-                action: 'remove' as const,
-                expenseName: expense.name,
-                amount: expense.monthly_amount,
-                source: expense.source,
-              },
-            ]
-          : state.history,
-      }
-    }),
-
-  setPendingExpenses: (expenses) => set({ pendingExpenses: expenses }),
-
-  confirmPending: () =>
-    set((state) => ({
-      expenses: [...state.expenses, ...state.pendingExpenses],
+export const useAppStore = create<AppState & AppActions>()(
+  persist(
+    (set) => ({
+      // ─── Initial state ────────────────────────────────────────────────────
+      activeTab: 'tab1',
+      expenses: [],
       pendingExpenses: [],
-      history: [
-        ...state.history,
-        ...state.pendingExpenses.map((e) => ({
-          id: generateId(),
-          date: new Date().toISOString(),
-          action: 'add' as const,
-          expenseName: e.name,
-          amount: e.monthly_amount,
-          source: e.source,
+      tab1Status: 'idle',
+      tab1Error: null,
+      activeModal: null,
+      tab2Report: null,
+      tab2Status: 'idle',
+      tab2Error: null,
+      budget: null,
+      history: [],
+
+      // ─── Actions ──────────────────────────────────────────────────────────
+      setActiveTab: (tab) => set({ activeTab: tab }),
+
+      addExpenses: (expenses) =>
+        set((state) => ({
+          expenses: [...state.expenses, ...expenses],
+          history: [
+            ...state.history,
+            ...expenses.map((e) => ({
+              id: generateId(),
+              date: new Date().toISOString(),
+              action: 'add' as const,
+              expenseName: e.name,
+              amount: e.monthly_amount,
+              source: e.source,
+            })),
+          ],
         })),
-      ],
-    })),
 
-  discardPending: () => set({ pendingExpenses: [] }),
+      addManualExpense: (expense) =>
+        set((state) => ({
+          expenses: [...state.expenses, expense],
+          history: [
+            ...state.history,
+            {
+              id: generateId(),
+              date: new Date().toISOString(),
+              action: 'add' as const,
+              expenseName: expense.name,
+              amount: expense.monthly_amount,
+              source: expense.source,
+            },
+          ],
+        })),
 
-  setTab1Status: (status, error?) =>
-    set({ tab1Status: status, tab1Error: error ?? null }),
+      removeExpense: (id) =>
+        set((state) => {
+          const expense = state.expenses.find((e) => e.id === id)
+          return {
+            expenses: state.expenses.filter((e) => e.id !== id),
+            history: expense
+              ? [
+                  ...state.history,
+                  {
+                    id: generateId(),
+                    date: new Date().toISOString(),
+                    action: 'remove' as const,
+                    expenseName: expense.name,
+                    amount: expense.monthly_amount,
+                    source: expense.source,
+                  },
+                ]
+              : state.history,
+          }
+        }),
 
-  openModal: (expense) => set({ activeModal: expense }),
-  closeModal: () => set({ activeModal: null }),
+      setPendingExpenses: (expenses) => set({ pendingExpenses: expenses }),
 
-  setTab2Report: (report) => set({ tab2Report: report }),
+      confirmPending: () =>
+        set((state) => ({
+          expenses: [...state.expenses, ...state.pendingExpenses],
+          pendingExpenses: [],
+          history: [
+            ...state.history,
+            ...state.pendingExpenses.map((e) => ({
+              id: generateId(),
+              date: new Date().toISOString(),
+              action: 'add' as const,
+              expenseName: e.name,
+              amount: e.monthly_amount,
+              source: e.source,
+            })),
+          ],
+        })),
 
-  setTab2Status: (status, error?) =>
-    set({ tab2Status: status, tab2Error: error ?? null }),
+      discardPending: () => set({ pendingExpenses: [] }),
 
-  setBudget: (budget) => {
-    if (budget !== null) {
-      localStorage.setItem('financescope_budget', String(budget))
-    } else {
-      localStorage.removeItem('financescope_budget')
-    }
-    set({ budget })
-  },
-}))
+      setTab1Status: (status, error?) =>
+        set({ tab1Status: status, tab1Error: error ?? null }),
+
+      openModal: (expense) => set({ activeModal: expense }),
+      closeModal: () => set({ activeModal: null }),
+
+      setTab2Report: (report) => set({ tab2Report: report }),
+
+      setTab2Status: (status, error?) =>
+        set({ tab2Status: status, tab2Error: error ?? null }),
+
+      setBudget: (budget) => set({ budget }),
+    }),
+    {
+      name: 'financescope-store',
+      // Only persist user data — never UI state or transient pending list
+      partialize: (state) => ({
+        expenses: state.expenses,
+        budget: state.budget,
+        history: state.history,
+      }),
+    },
+  ),
+)

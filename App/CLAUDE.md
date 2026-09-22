@@ -11,6 +11,7 @@ Web app single-file (`index.html`) per migliorare la visibilità finanziaria per
 ```
 App/
 ├── index.html          # Tutta l'app (HTML + CSS + JS)
+├── design-system.html  # Design system visivo interattivo — apri nel browser come riferimento
 ├── README.md           # Specifiche complete del progetto
 └── .claude/agents/     # Agenti specializzati
     ├── design-agent.md
@@ -18,6 +19,17 @@ App/
     ├── accessibility-validator.md
     └── test-agent.md
 ```
+
+## Design System
+
+Il file `design-system.html` è la fonte visiva di verità per l'interfaccia. Contiene:
+- **Token CSS** completi (colori, spaziatura, bordi, motion)
+- **Palette**: violet (`#7C3AED` / `#A855F7`) × teal (`#14B8A6` / `#2DD4BF`), semantic rose/amber/green
+- **Tipografia**: Inter unico typeface, scale 10→40px
+- **Componenti** da atomi (btn, badge, semaforo, input) a organismi (modal, tab bar, summary strip)
+- **Pattern vietati**: niente gradient clip su parole singole, niente box-shadow per elevazione, niente fade-in automatici
+
+Prima di qualsiasi modifica CSS o layout, consultare `design-system.html` e il `design-agent`.
 
 ## Regole globali (tutti gli agenti)
 

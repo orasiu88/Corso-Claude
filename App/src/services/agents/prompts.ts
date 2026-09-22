@@ -18,7 +18,15 @@ Restituisci SOLO un oggetto JSON valido con questa struttura (nessun testo aggiu
         "campi_chiave": ["Scadenza: 31 dicembre 2025", "Fornitore: Enel"],
         "riassunto_semplice": "Questa è la tua bolletta della luce. Paghi circa 45€ al mese.",
         "note": ["Verifica se il prezzo è fisso o variabile", "Controlla la data di scadenza del contratto"],
-        "semaforo": "verde" | "giallo" | "rosso"
+        "semaforo": "verde" | "giallo" | "rosso",
+        "clausole_restrittive": [
+          {
+            "tipo": "mora" | "penale_recesso" | "rinnovo_automatico" | "preavviso" | "variazione_costo" | "altro",
+            "descrizione": "Se paghi in ritardo ti vengono addebitati 5€ per ogni giorno di ritardo.",
+            "importo": "5€/giorno",
+            "gravita": "alta" | "media" | "bassa"
+          }
+        ]
       }
     }
   ]
@@ -27,7 +35,16 @@ Restituisci SOLO un oggetto JSON valido con questa struttura (nessun testo aggiu
 Regole:
 - Usa linguaggio semplice, senza gergo finanziario
 - monthly_amount è sempre il valore mensile (importo annuale / 12)
-- renewal_date: data di scadenza o prossimo rinnovo in formato YYYY-MM-DD; ometti il campo se non presente nel documento
+- renewal_date: data di scadenza o prossimo rinnovo in formato YYYY-MM-DD; ometti se non presente
+- clausole_restrittive: array obbligatorio (può essere vuoto []):
+  - mora: commissioni o interessi per ritardo nel pagamento
+  - penale_recesso: costo per uscire dal contratto prima della scadenza
+  - rinnovo_automatico: il contratto si rinnova senza azione esplicita dell'utente
+  - preavviso: tempo minimo obbligatorio per comunicare la disdetta
+  - variazione_costo: variazioni tariffarie programmate (adeguamento ISTAT, cambio fascia, ecc.)
+  - altro: qualsiasi altra clausola che limita le scelte dell'utente
+  - gravita: alta = impatto economico diretto significativo; media = da tenere a mente; bassa = informativa
+  - importo: opzionale, solo se esplicitato nel documento
 - Se non trovi spese ricorrenti, restituisci {"expenses": []}
 - semaforo: verde = tutto chiaro, giallo = qualcosa da verificare, rosso = documento confuso o importi variabili
 - riassunto_semplice: max 2 frasi, nessun termine tecnico
@@ -48,6 +65,14 @@ Restituisci SOLO un oggetto JSON valido con questa struttura (nessun testo aggiu
   "clausole_importanti": [
     "Il contratto si rinnova automaticamente"
   ],
+  "clausole_restrittive": [
+    {
+      "tipo": "mora" | "penale_recesso" | "rinnovo_automatico" | "preavviso" | "variazione_costo" | "altro",
+      "descrizione": "Se paghi in ritardo ti vengono addebitati 5€ per ogni giorno di ritardo.",
+      "importo": "5€/giorno",
+      "gravita": "alta" | "media" | "bassa"
+    }
+  ],
   "semaforo": "verde" | "giallo" | "rosso",
   "semaforo_motivo": "Il documento è chiaro: tutti gli importi e le date sono indicati esplicitamente.",
   "riassunto_semplice": "Questa è la tua bolletta della luce. Paghi circa 45€ al mese. Il contratto scade il 31 dicembre 2025."
@@ -56,6 +81,15 @@ Restituisci SOLO un oggetto JSON valido con questa struttura (nessun testo aggiu
 Regole:
 - USA SEMPRE linguaggio semplice, nessun gergo finanziario senza spiegazione
 - importo_periodico: formula "Paghi X€ ogni [periodo]"
+- clausole_restrittive: array obbligatorio (può essere vuoto []):
+  - mora: commissioni o interessi per ritardo nel pagamento (es. "5€ per ogni giorno di ritardo")
+  - penale_recesso: costo per uscire dal contratto prima della scadenza
+  - rinnovo_automatico: il contratto si rinnova senza azione esplicita dell'utente
+  - preavviso: tempo minimo obbligatorio per comunicare la disdetta (es. "30 giorni prima")
+  - variazione_costo: variazioni tariffarie programmate (adeguamento ISTAT, cambio fascia oraria, ecc.)
+  - altro: qualsiasi altra clausola che limita la libertà dell'utente
+  - gravita: alta = impatto economico diretto significativo; media = da tenere a mente; bassa = informativa
+  - importo: opzionale, includi solo se il documento riporta un valore esplicito
 - semaforo: verde = tutto chiaro, giallo = qualcosa da verificare, rosso = documento confuso
 - semaforo_motivo: una sola frase semplice che spiega il colore
 - riassunto_semplice: max 3 frasi, le più importanti per l'utente

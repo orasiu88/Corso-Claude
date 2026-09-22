@@ -1,7 +1,42 @@
 import { useEffect, useId, useRef } from 'react'
 import { useAppStore } from '@store/useAppStore'
 import { Semaforo } from '@atoms/Semaforo'
+import type { ClausolaRestrittiva, ClausolaTipo } from '@t/index'
 import styles from './HighlightsModal.module.css'
+
+const CLAUSE_ICON: Record<ClausolaTipo, string> = {
+  mora:               '💸',
+  penale_recesso:     '🚪',
+  rinnovo_automatico: '🔄',
+  preavviso:          '📣',
+  variazione_costo:   '📈',
+  altro:              'ℹ️',
+}
+
+const CLAUSE_LABEL: Record<ClausolaTipo, string> = {
+  mora:               'Mora per ritardo',
+  penale_recesso:     'Penale di recesso',
+  rinnovo_automatico: 'Rinnovo automatico',
+  preavviso:          'Preavviso obbligatorio',
+  variazione_costo:   'Variazione costo',
+  altro:              'Altra clausola',
+}
+
+function ModalClauseCard({ clause }: { clause: ClausolaRestrittiva }) {
+  return (
+    <div className={`${styles.clauseCard} ${styles[`clause_${clause.gravita}`]}`}>
+      <div className={styles.clauseHeader}>
+        <span aria-hidden="true">{CLAUSE_ICON[clause.tipo]}</span>
+        <span className={styles.clauseType}>{CLAUSE_LABEL[clause.tipo]}</span>
+        <span className={`${styles.gravityBadge} ${styles[`gravity_${clause.gravita}`]}`}>
+          {clause.gravita === 'alta' ? '⚠ Alta' : clause.gravita === 'media' ? 'Media' : 'Bassa'}
+        </span>
+      </div>
+      <p className={styles.clauseDesc}>{clause.descrizione}</p>
+      {clause.importo && <p className={styles.clauseAmount}>{clause.importo}</p>}
+    </div>
+  )
+}
 
 export function HighlightsModal() {
   const { activeModal, closeModal } = useAppStore()
@@ -104,6 +139,17 @@ export function HighlightsModal() {
                   <li key={i} className={styles.listItem}>{nota}</li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {highlights.clausole_restrittive && highlights.clausole_restrittive.length > 0 && (
+            <div className={styles.clauseSection}>
+              <p className={styles.clauseSectionTitle}>📋 Clausole restrittive</p>
+              <div className={styles.clauseList}>
+                {highlights.clausole_restrittive.map((clause, i) => (
+                  <ModalClauseCard key={i} clause={clause} />
+                ))}
+              </div>
             </div>
           )}
 
