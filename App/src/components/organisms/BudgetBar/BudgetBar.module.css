@@ -1,0 +1,102 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--s6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pct {
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.barTrack {
+  height: 12px;
+  background: var(--surface2);
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--teal2);
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+.barNear {
+  background: var(--amber);
+}
+
+.barOver {
+  background: var(--rose);
+}
+
+.legend {
+  display: flex;
+  gap: var(--s6);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.legendLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.legendValue {
+  font-size: var(--text-base);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.valueOk  { color: var(--green); }
+.valueNear{ color: var(--amber); }
+.valueOver{ color: var(--rose); }
+
+.alert {
+  font-size: var(--text-sm);
+  color: var(--rose);
+  background: rgba(255,77,109,.08);
+  border: 1px solid rgba(255,77,109,.2);
+  border-radius: var(--radius-sm);
+  padding: var(--s3) var(--s4);
+  line-height: 1.5;
+}
+
+.alertWarn {
+  font-size: var(--text-sm);
+  color: var(--amber);
+  background: rgba(245,158,11,.08);
+  border: 1px solid rgba(245,158,11,.2);
+  border-radius: var(--radius-sm);
+  padding: var(--s3) var(--s4);
+  line-height: 1.5;
+}

@@ -1,0 +1,23 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+/* --violet-light for violet-tinted badges: passes 7.8:1 on violet bg (WCAG 1.4.3 AA) */
+.source-pdf    { background: rgba(124,58,237,.12);  color: var(--violet-light); border: 1px solid rgba(124,58,237,.2); }
+.source-manual { background: rgba(255,255,255,.06); color: var(--text2);        border: 1px solid var(--border2); }
+.default       { background: rgba(255,255,255,.06); color: var(--text2);        border: 1px solid var(--border2); }
+
+/* Category */
+.utenze        { background: rgba(20,184,166,.12);  color: var(--teal2);        border: 1px solid rgba(20,184,166,.2); }
+.abbonamenti   { background: rgba(168,85,247,.12);  color: var(--violet-light); border: 1px solid rgba(168,85,247,.2); }
+.mutuo-affitto { background: rgba(245,158,11,.12);  color: var(--amber);        border: 1px solid rgba(245,158,11,.2); }
+.assicurazioni { background: rgba(255,77,109,.12);  color: var(--rose);         border: 1px solid rgba(255,77,109,.2); }
+.altro         { background: rgba(148,163,184,.08); color: var(--text2);        border: 1px solid rgba(148,163,184,.15); }

@@ -1,0 +1,1 @@
+export { HighlightsModal } from './HighlightsModal'

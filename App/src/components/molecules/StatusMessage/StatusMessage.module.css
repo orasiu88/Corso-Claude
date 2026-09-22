@@ -1,0 +1,34 @@
+.wrapper { margin-top: var(--s3); }
+
+.message {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.loading { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.success { background: rgba(16,185,129,.12); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+.error   { background: rgba(255,77,109,.12);  color: var(--rose);  border: 1px solid rgba(255,77,109,.2); }
+
+.dots::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--violet2);
+  border-radius: 50%;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .5; transform: scale(.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots::before { animation: none; }
+}

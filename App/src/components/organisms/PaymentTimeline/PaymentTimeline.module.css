@@ -1,0 +1,119 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--s6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s8);
+  text-align: center;
+  color: var(--text2);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s3) var(--s4);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+.soon   { border-color: rgba(245,158,11,.3); background: rgba(245,158,11,.04); }
+.urgent { border-color: rgba(255,77,109,.3);  background: rgba(255,77,109,.04); }
+
+.dateBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px;
+  padding: var(--s2) var(--s3);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.soon .dateBadge   { background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.25); }
+.urgent .dateBadge { background: rgba(255,77,109,.1); border-color: rgba(255,77,109,.25); }
+
+.daysNum {
+  font-size: var(--text-xl);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  line-height: 1;
+}
+
+.soon .daysNum   { color: var(--amber); }
+.urgent .daysNum { color: var(--rose); }
+
+.daysLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: .04em;
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemDate {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.itemRight {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.itemAmount {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.itemFreq {
+  font-size: 11px;
+  color: var(--text3);
+}

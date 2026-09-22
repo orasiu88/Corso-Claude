@@ -1,0 +1,41 @@
+.nav { /* layout managed by AppShell */ }
+
+.tablist {
+  display: flex;
+  gap: 4px;
+  padding: 0 var(--s8);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  background: transparent;
+  color: var(--text2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  bottom: -1px;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.tab:hover:not(.active) {
+  color: var(--text);
+  background: rgba(255,255,255,.04);
+}
+
+.active {
+  color: var(--text);
+  background: var(--bg);
+  border-color: var(--border);
+  border-bottom-color: var(--bg);
+}

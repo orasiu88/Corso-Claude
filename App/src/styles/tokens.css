@@ -1,0 +1,69 @@
+/* ─── Design Tokens — FinanceScope Design System v1.0 ───────────────────── */
+
+:root {
+  /* Backgrounds */
+  --bg:       #0D0D14;
+  --surface:  #16161F;
+  --surface2: #1E1E2C;
+
+  /* Borders */
+  --border:  rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+
+  /* Brand */
+  --violet:  #7C3AED;
+  --violet2: #A855F7;
+  --teal:    #14B8A6;
+  --teal2:   #2DD4BF;
+
+  /* Semantic */
+  --rose:  #FF4D6D; /* raised from #F43F5E — WCAG 1.4.3 AA on semaforo/badge (4.5:1 min) */
+  --amber: #F59E0B;
+  --green: #10B981;
+
+  /* Accessible violet for small text (≤13px) on violet-tinted backgrounds */
+  --violet-light: #C4B5FD;
+
+  /* Text */
+  --text:  #F0EFFB;
+  --text2: rgba(240,239,251,.6);
+  --text3: rgba(240,239,251,.52); /* raised from .35 — WCAG 1.4.3 AA requires 4.5:1 on labels */
+
+  /* Gradients */
+  --grad:      linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #14B8A6 100%);
+  --grad-soft: linear-gradient(135deg, rgba(124,58,237,.18) 0%, rgba(20,184,166,.12) 100%);
+
+  /* Shape */
+  --radius:    14px;
+  --radius-sm: 8px;
+
+  /* Motion */
+  --transition: .18s cubic-bezier(.4,0,.2,1);
+  --spring:     .22s cubic-bezier(.34,1.56,.64,1);
+
+  /* Spacing (4px base) */
+  --s1:  4px;
+  --s2:  8px;
+  --s3:  12px;
+  --s4:  16px;
+  --s5:  20px;
+  --s6:  24px;
+  --s8:  32px;
+  --s9:  36px;
+  --s12: 48px;
+  --s16: 64px;
+
+  /* Type scale */
+  --text-xs:   0.6875rem;  /* 11px */
+  --text-sm:   0.8125rem;  /* 13px */
+  --text-base: 0.9375rem;  /* 15px */
+  --text-lg:   1.0625rem;  /* 17px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  2rem;       /* 32px */
+
+  /* Z-index layers */
+  --z-modal:   100;
+  --z-overlay: 99;
+  --z-sticky:  10;
+}
